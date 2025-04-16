@@ -2,10 +2,8 @@ package com.zoo.hsezoorest.domain.model.enclosure;
 
 import com.zoo.hsezoorest.domain.model.animal.Animal;
 import com.zoo.hsezoorest.domain.model.animal.Species;
+import lombok.Getter;
 
-/**
- * Enum representing different types of enclosures in the zoo
- */
 public enum EnclosureType {
     PREDATOR("Predator", true, false, false),
     HERBIVORE("Herbivore", false, true, false),
@@ -14,6 +12,7 @@ public enum EnclosureType {
     TERRARIUM("Terrarium", false, false, false),
     MIXED("Mixed", true, true, false); // A special type that can house multiple types of animals
 
+    @Getter
     private final String displayName;
     private final boolean canHousePredators;
     private final boolean canHouseHerbivores;
@@ -29,24 +28,13 @@ public enum EnclosureType {
         this.canHouseBirds = canHouseBirds;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    /**
-     * Check if this enclosure type can house a specific animal
-     * @param animal The animal to check compatibility with
-     * @return true if compatible, false otherwise
-     */
     public boolean canHouseAnimal(Animal animal) {
         Species species = animal.getSpecies();
 
-        // Special case for MIXED enclosures
         if (this == MIXED) {
             return true;
         }
 
-        // Logic for other enclosure types
         if (species.isPredator() && !canHousePredators) {
             return false;
         }
@@ -55,7 +43,9 @@ public enum EnclosureType {
             return false;
         }
 
-        // Additional logic could be added for birds and aquatic animals
+        if (species.isAvian() && !canHouseBirds) {
+            return false;
+        }
 
         return true;
     }

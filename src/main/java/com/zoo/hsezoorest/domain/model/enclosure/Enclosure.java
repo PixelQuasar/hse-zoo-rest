@@ -26,7 +26,7 @@ public class Enclosure {
         this.isClean = true;
     }
 
-    public boolean addAnimal(Animal animal) {
+    public void addAnimal(Animal animal) {
         if (!hasAvailableSpace()) {
             throw new IllegalStateException("Enclosure is at full capacity");
         }
@@ -37,11 +37,11 @@ public class Enclosure {
             );
         }
 
-        return animals.add(animal);
+        animals.add(animal);
     }
 
-    public boolean removeAnimal(Animal animal) {
-        return animals.remove(animal);
+    public void removeAnimal(Animal animal) {
+        animals.remove(animal);
     }
 
     public void clean() {
