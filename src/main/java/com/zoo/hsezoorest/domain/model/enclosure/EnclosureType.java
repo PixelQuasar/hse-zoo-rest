@@ -31,22 +31,29 @@ public enum EnclosureType {
     public boolean canHouseAnimal(Animal animal) {
         Species species = animal.getSpecies();
 
+        // Handle the special MIXED case first
         if (this == MIXED) {
-            return true;
+            // The current MIXED definition is (true, true, false) -> PREDATOR or HERBIVORE, but not AVIAN
+            // If MIXED should truly house *any* animal, its definition or this logic needs adjustment.
+            // Assuming current definition (Predator/Herbivore, non-Avian) is intended:
+            // return !species.isAvian(); 
+            // --- OR --- If MIXED means truly anything:
+             return true;
         }
 
-        if (species.isPredator() && !canHousePredators) {
-            return false;
+        // Check specific incompatibilities
+        if (species.isAvian() && !this.canHouseBirds) {
+            return false; // If it's a bird but enclosure isn't for birds
+        }
+        if (species.isPredator() && !this.canHousePredators) {
+            return false; // If it's a predator but enclosure isn't for predators
+        }
+        // If it's a non-predator, non-avian (i.e., a standard herbivore) and enclosure isn't for herbivores
+        if (!species.isPredator() && !species.isAvian() && !this.canHouseHerbivores) { 
+            return false; 
         }
 
-        if (!species.isPredator() && !canHouseHerbivores) {
-            return false;
-        }
-
-        if (species.isAvian() && !canHouseBirds) {
-            return false;
-        }
-
+        // If none of the above specific incompatibilities match, it's compatible.
         return true;
     }
 }
